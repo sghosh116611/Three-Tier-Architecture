@@ -1,0 +1,16 @@
+FROM maven AS build
+WORKDIR /app
+
+COPY . .
+
+RUN mvn clean package -DskipTests
+
+FROM openjdk:latest AS runtime
+
+WORKDIR /opt/app
+
+COPY --from=build /app/target/Users-Microservice-0.0.1-SNAPSHOT.war .
+
+EXPOSE 8080
+
+ENTRYPOINT [ "java", "-jar", "Users-Microservice-0.0.1-SNAPSHOT.war" ]
