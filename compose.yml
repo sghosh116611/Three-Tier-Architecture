@@ -1,4 +1,22 @@
 services:
+  user-ms:
+    image: user-ms
+    ports:
+      - 8080:8080
+    links:
+      - mongo-server
+    networks:
+      - three-tier-network
+  
+  order-ms:
+    image: order-ms
+    ports:
+      - 3000:3000
+    links:
+      - mysql
+    networks:
+      - three-tier-network
+
   mongo-express:
     image: mongo-express
     ports:
@@ -13,16 +31,7 @@ services:
     links:
       - mongo-server
     networks:
-      - mongo-compose-network
-  
-  user-ms:
-    image: user-ms
-    ports:
-      - 8080:8080
-    links:
-      - mongo-server
-    networks:
-      - mongo-compose-network
+      - three-tier-network
 
   mongo-server:
     image: mongo:latest
@@ -36,10 +45,20 @@ services:
     volumes:
       - mongodb_data_container:/data/db
     networks:
-      - mongo-compose-network
+      - three-tier-network
+  
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: redhat1234#
+    ports:
+      - "3307:3306"
+    networks:
+      - three-tier-network
 
 networks: 
-    mongo-compose-network:
+    three-tier-network:
       driver: bridge
 
 volumes:
