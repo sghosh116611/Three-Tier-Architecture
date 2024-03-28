@@ -22,15 +22,13 @@ function connectToMySQL() {
 }
 
 function executeQuery(connection, query) {
-  return new Promise((resolve, reject) => {
-    connection.query(query, (err, results, fields) => {
-      if (err) {
-        console.error('Error executing query: ' + err.stack);
-        reject(err);
-        return;
-      }
-      resolve(results);
-    });
+
+  connection.query(query, (err, results, fields) => {
+    if (err) {
+      console.error('Error executing query: ' + err.stack);
+      reject(err);
+    }
+    return results;
   });
 }
 

@@ -1,9 +1,12 @@
 const express = require('express');
+const cors = require('cors');
 const axios = require('axios');
 const { connectToMySQL, executeQuery, closeConnection } = require('./utils/sql');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+app.use(cors({ origin: 'http://localhost:3001' }));
 
 app.get('/order', async (req, res) => {
     try {
@@ -19,8 +22,16 @@ app.get('/order', async (req, res) => {
             var totalPrice = result.numberOfBooks * result.price;
             executeQuery(connection, `INSERT INTO Three_Tier_Project.Orders(Customer_ID,PRICE) VALUES('${id}',${totalPrice})`);
         })
+        connection.query(`SELECT * FROM Three_Tier_Project.Orders`, (err, results) => {
+            if (err) {
+                console.error('Error executing SQL query:', err);
+                res.status(500).json({ error: 'Internal server error' });
+                return;
+            }
+
+            res.json(results);
+        });
         closeConnection(connection);
-        res.json(results);
     } catch (error) {
         console.error('Error calling other service:', error);
         res.status(500).json({ error: 'Internal server error' });

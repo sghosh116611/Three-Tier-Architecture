@@ -1,0 +1,54 @@
+.App {
+  text-align: center;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.button {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+.result-container {
+  margin-top: 20px;
+}
+
+.result-title {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
