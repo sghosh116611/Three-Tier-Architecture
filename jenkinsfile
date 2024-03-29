@@ -1,0 +1,50 @@
+pipeline {
+    agent none
+    stages {
+        stage('Checkout') {
+            // Checkout Git
+            agent any
+            steps {
+                sh 'echo Checkedout git repository'
+                git 'https://github.com/sghosh116611/Three-Tier-Architecture.git'
+            }
+        }
+        stage('Backend - Users Microservice') {
+            agent {
+                docker {
+                    image 'maven:3.9.6-eclipse-temurin-17-alpine'
+                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            steps {
+                // Run Unit Tests & Generate WAR
+                sh '''
+                    cd Users-Microservice/
+                    mvn test -Dtest="UserControllerTest"
+                    mvn clean package
+                '''
+            }
+        }
+        stage('Build & Push Docker Images') {
+            agent {
+                docker {
+                    image 'docker:26.0.0-cli-alpine3.19'
+                    args '--user root -v /var/run/docker.sock:/var/run/docker.sock'
+                }
+            }
+            environment {
+                DOCKER_IMAGE_USER_MS = "ghoshsoumojit53/three_tier_project_user_ms:${BUILD_NUMBER}"
+            }
+            steps {
+                // Build docker image and push to dockerhub
+                script{
+                    sh 'cd Users-Microservice && docker build -t ${DOCKER_IMAGE_USER_MS} .'
+                    def dockerImage = docker.image("${DOCKER_IMAGE_USER_MS}")
+                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub_credential') {
+                        dockerImage.push()
+                    }
+                }
+            }
+        }
+    }
+}
