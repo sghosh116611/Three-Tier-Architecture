@@ -16,6 +16,15 @@ services:
       - mysql
     networks:
       - three-tier-network
+    
+  react-frontend:
+    image: react-frontend
+    ports:
+      - 3001:3001
+    links:
+      - order-ms
+    networks:
+      - three-tier-network
 
   mongo-express:
     image: mongo-express
