@@ -6,5 +6,5 @@ This Docker Compose configuration sets up a multi-container environment for a th
 ## Usage
 1. Clone the repository.
 2. Navigate to the directory containing the Docker Compose file.
-3. Run the following command to start the containers: docker-compose up
+3. Run the following command to start the containers: docker-compose up.
 
